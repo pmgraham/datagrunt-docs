@@ -101,7 +101,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="welcome-to-datagrunt">Welcome To Datagrunt</h1>
-<p>Datagrunt is a Python library designed to simplify the way you work with CSV files. It provides a streamlined approach to reading, processing, and transforming your data into various formats, making data manipulation efficient and intuitive. Datagrunt is powered <a href="https://duckdb.org/">DuckDB</a>, an incredibly fast an flexible locally hosted analytics (OLAP) database.</p>
+<p>Datagrunt is a Python library designed to simplify the way you work with CSV files. It provides a streamlined approach to reading, processing, and transforming your data into various formats, making data manipulation efficient and intuitive. Datagrunt is powered by <a href="https://duckdb.org/">DuckDB</a>, an incredibly fast an flexible locally hosted analytics (OLAP) database.</p>
 <h2 id="why-datagrunt">Why Datagrunt?</h2>
 <p>Born out of real-world frustration, Datagrunt eliminates the need for repetitive coding when handling CSV files. Whether you're a data analyst, data engineer, or data scientist, Datagrunt empowers you to focus on insights, not tedious data wrangling. Datagrunt will auto parse CSV files, automatically inferring key attributes such as the file delimiter, all while giving you the necessary level of control to provide your own paramaters as needed (such as setting your own delimiter vs having Datagrunt auto infer the delimiter for you).</p>
 <h2 id="key-features">Key Features</h2>
@@ -129,7 +129,7 @@
 <pre><code class="language-bash">pip install datagrunt
 </code></pre>
 <h2 id="getting-started">Getting Started</h2>
-<pre><code class="language-python">from Datagrunt.csvfiles import CSVFile
+<pre><code class="language-python">from datagrunt.csvfile import CSVFile
 
 # Load your CSV file
 csv_file = CSVFile('myfile.csv')
@@ -142,7 +142,7 @@ print(f&quot;CSV Attributes: {csv_file.attributes()}&quot;)
 csv_file.delimiter = '|' 
 </code></pre>
 <h2 id="duckdb-integration-for-performant-sql-queries">DuckDB Integration for Performant SQL Queries</h2>
-<pre><code class="language-python">from datagrunt.csvfiles import CSVFile
+<pre><code class="language-python">from datagrunt.csvfile import CSVFile
 
 csv_file = CSVFile('myfile.csv')
 
@@ -228,5 +228,5 @@ duckdb.read_csv(dg.filepath, delimiter=dg.delimiter) # use the attributes genera
 
 <!--
 MkDocs version : 1.6.0
-Build Date UTC : 2024-08-26 01:52:56.528165+00:00
+Build Date UTC : 2024-08-26 19:33:52.818171+00:00
 -->
