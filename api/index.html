@@ -43,26 +43,76 @@
                 <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../examples/">Usage Examples</a>
+                </li>
+              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">API</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#project-hierarchy">Project Hierarchy</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#class-list">Class List</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#class-inheritance-order-single-inheritance">Class Inheritance Order (Single Inheritance)</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#classes">Classes</a>
+    <li class="toctree-l2"><a class="reference internal" href="#core-classes">Core Classes</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#filebase">FileBase</a>
+    <li class="toctree-l3"><a class="reference internal" href="#fileproperties">FileProperties</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#fileevaluator">FileEvaluator</a>
+    <li class="toctree-l3"><a class="reference internal" href="#csvproperties">CSVProperties</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#duckdbdatabase">DuckDBDatabase</a>
+        </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#csvparser">CSVParser</a>
+    <li class="toctree-l2"><a class="reference internal" href="#csv-reader-and-writer-classes">CSV Reader and Writer Classes</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#properties">Properties</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#csvfile">CSVFile</a>
+    <li class="toctree-l3"><a class="reference internal" href="#csvreaderduckdbengine">CSVReaderDuckDBEngine</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#get_sample">get_sample()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#to_dataframe">to_dataframe()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#to_arrow_table">to_arrow_table()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#to_dicts">to_dicts()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#csvreaderpolarsengine">CSVReaderPolarsEngine</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#get_sample_1">get_sample()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#to_dataframe_1">to_dataframe()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#to_arrow_table_1">to_arrow_table()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#to_dicts_1">to_dicts()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#csvwriterduckdbengine">CSVWriterDuckDBEngine</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#write_csv">write_csv()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#write_excel">write_excel()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#write_json">write_json()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#write_json_newline_delimited">write_json_newline_delimited()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#write_parquet">write_parquet()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#csvwriterpolarsengine">CSVWriterPolarsEngine</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#write_csv_1">write_csv()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#write_excel_1">write_excel()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#write_json_1">write_json()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#write_json_newline_delimited_1">write_json_newline_delimited()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#write_parquet_1">write_parquet()</a>
+    </li>
+        </ul>
     </li>
         </ul>
     </li>
@@ -93,195 +143,141 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="api-documentation">API Documentation</h1>
-<h2 id="project-hierarchy">Project Hierarchy</h2>
-<p>Here is the current application directory structure:</p>
-<pre><code>├── datagrunt
-│   ├── csvfiles.py
-│   └── core
-│       ├── filehelpers.py
-│       └── databases.py
-|       └── logger.py
-</code></pre>
-<p>There are two base modules in the <code>core</code> directory: <code>databases.py</code> and <code>filehelpers.py</code>. These two modules provide the core functionality for datagrunt. The <code>databases.py</code> module is designed to support interfacing with databases, including <code>DuckDB</code>. Currently only <code>DuckDB</code> is supported because it's the engine that powers local processing for CSV files. There are plans to support other database platforms in the future, starting with reads, and later adding writes.</p>
-<p>In the root of the <code>datagrunt</code> directory, <code>csvfiles.py</code> utilize those core modules to power all functionality.</p>
-<h2 id="class-list">Class List</h2>
-<pre><code>├── databases.py
-│       └── DuckDBDatabase
-├── filehelpers.py
-│   ├── FileBase
-│   ├── FileProperties
-|   └── CSVParser
-├── logger.py
-│   ├── show_warning()
-│   ├── show_large_file_warning()
-├── csvfiles.py
-│   └── CSVFile
-</code></pre>
-<h2 id="class-inheritance-order-single-inheritance">Class Inheritance Order (Single Inheritance)</h2>
-<pre><code>FileBase
-├── FileEvaluator
-│   └──CSVParser
-        └── CSVFile (DuckDBDatabase is instantiated here, not inherited)
-</code></pre>
-<h2 id="classes">Classes</h2>
-<h3 id="filebase">FileBase</h3>
-<p>The <code>FileBase</code> class defines what a file is and builds core attributes for a file. Here is a list of attributes in the <code>FileBase</code> class:</p>
-<p><code>filepath</code>: str Path to the file.</p>
-<p><code>filename</code>: str Filename of the file. Uses the <code>Path</code> module to extract the filename.</p>
-<p><code>extension</code>: str Extension of the file. Uses the <code>Path</code> module to extract the extension.</p>
-<p><code>extension_string</code>: str String representation of the extension. This removes the <code>.</code> from the extension.</p>
-<p><code>size_in_bytes</code>: int Size of the file in bytes.</p>
-<p><code>size_in_kb</code>: int Size of the file in kilobytes.</p>
-<p><code>size_in_mb</code>: int Size of the file in megabytes.</p>
-<p><code>size_in_gb</code>: int Size of the file in gigabytes.</p>
-<p><code>size_in_tb</code>: int Size of the file in terabytes.</p>
-<h3 id="fileevaluator">FileEvaluator</h3>
-<p>The <code>FileEvalutor</code> class extends the <code>FileBase</code> class and adds attributes to better understand the nature of the file object.</p>
-<p><strong>File Type Checks:</strong></p>
-<p><code>is_structured</code>: Returns True if the file extension suggests a structured format (CSV, Excel, Parquet, Avro), False otherwise.</p>
-<p><code>is_semi_structured</code>: Returns True if the file extension suggests a semi-structured format (JSON), False otherwise.</p>
-<p><code>is_unstructured</code>: Returns True if the file extension is not recognized as structured or semi-structured, False otherwise.</p>
-<p><code>is_standard</code>: Returns True if the file extension is considered a standard format (CSV, TSV, TXT, JSON), False otherwise.</p>
-<p><code>is_proprietary</code>: Returns True if the file extension is associated with a proprietary format (Excel formats), False otherwise.</p>
-<p><code>is_csv</code>: Returns True if the file has a CSV-related extension (csv, tsv, txt), False otherwise.</p>
-<p><code>is_excel</code>: Returns True if the file has an Excel-related extension (xlsx, xlsm, xlsb, xltx, xltm, xls, xlt), False otherwise.</p>
-<p><code>is_apache</code>: Returns True if the file has an Apache-related extension (parquet, avro), False otherwise.</p>
-<p><strong>File Content/Size Checks:</strong></p>
-<p><code>is_empty</code>: Returns True if the file size is 0 bytes, indicating an empty file, False otherwise.</p>
-<p><code>is_large</code>: Returns True if the file size is 1 GB or larger, False otherwise.</p>
-<h3 id="duckdbdatabase">DuckDBDatabase</h3>
-<p><strong>Initialization and Setup</strong></p>
-<p><code>__init__(self, filepath):</code>
-    Initializes the DuckDBDatabase object.
-    Takes the filepath of the data file as input.
-    Sets up the database filename (.db extension) and table name based on the input filepath.</p>
-<p><code>_set_database_filename(self):</code>
-    Private method (intended for internal use).
-    Generates the filename for the DuckDB database file (e.g., "data.csv" becomes "data.db").</p>
-<p><code>_set_database_table_name(self):</code>
-    Private method.
-    Generates the table name within the DuckDB database based on the input filename (e.g., "data.csv" becomes table "data").</p>
-<p><code>set_database_connection(self, threads=DEFAULT_THREAD_COUNT):</code>
-    Property that establishes a connection to the DuckDB database.
-    Takes an optional threads argument (defaults to 16) to configure DuckDB's threading.
-    Returns a DuckDB connection object.</p>
-<p><strong>SQL Statement Generation</strong></p>
-<p><code>select_from_table_statement(self):</code>
-    Generates a simple SQL SELECT statement to retrieve all data from the database table.</p>
-<p><code>export_to_csv_statement(self):</code>
-    Generates a SQL COPY statement to export data from the table to a CSV file ("output.csv").</p>
-<p><code>export_to_json_array_statement(self):</code>
-    Generates a SQL COPY statement to export data to a JSON file ("output.json") with the data enclosed in a JSON array.</p>
-<p><code>export_to_json_new_line_delimited_statement(self):</code>
-    Generates a SQL COPY statement to export data to a newline-delimited JSON file ("output.jsonl").</p>
-<p><code>export_to_parquet_statement(self):</code>
-    Generates a SQL COPY statement to export data to a Parquet file ("output.parquet").</p>
-<p><code>export_to_excel_statement(self):</code>
-    Generates SQL statements to install and load spatial extensions in DuckDB and then export data to an Excel file ("output.xlsx").
-    Data Processing and Export:</p>
-<p><strong>Return Dataframes or Write Data to a File</strong></p>
-<p><code>write_to_file(self, sql_import_statement, sql_export_statement):</code>
-    Executes SQL statements to import data into the DuckDB database and then export it to a file.
-    Takes two SQL statements as input: <strong>sql_import_statement</strong> and <strong>sql_export_statement</strong>.
-    The <strong>sql_import_statement</strong> executes a SQL statement to import data into the DuckDB database.
-    The <strong>sql_export_statement</strong> executes a SQL statement to export data from the DuckDB database to a file.</p>
-<p><code>to_dataframe(self, sql_import_statement):</code>
-    Imports data into the DuckDB database using the provided <strong>sql_import_statement</strong>.
-    Executes a SELECT statement to retrieve all data from the table.
-    Returns the data as a Polars DataFrame.</p>
-<h3 id="csvparser">CSVParser</h3>
-<p>The CSVParser class focuses on parsing CSV files, primarily determining the delimiter used in the file. Here's a breakdown of its methods:</p>
-<p><strong>Initialization and Setup</strong></p>
-<p><code>__init__(self, filepath):</code>
-    Initializes the CSVParser object.
-    Inherits from FileEvaluator to get file properties.
-    Reads the first line of the file and stores it in self.first_row.
-    Infers and stores the CSV delimiter in self.delimiter.</p>
-<p>Delimiter Inference:</p>
-<p><code>_get_first_line_from_file(self):</code>
-    Private method (intended for internal use).
-    Reads and returns the first line of the CSV file, stripping any leading/trailing whitespace.</p>
-<p><code>get_most_common_non_alpha_numeric_character_from_string(self):</code>
-    Analyzes the self.first_row to find the most frequent non-alphanumeric character.
-    This is a key step in inferring the delimiter.
-    Returns a list of tuples, where each tuple contains a character and its frequency, sorted by frequency in descending order.</p>
-<p><code>infer_csv_file_delimiter(self):</code>
-    Uses the results from get_most_common_non_alpha_numeric_character_from_string() to determine the most likely delimiter.
-    Handles special cases:
-    If the file is empty, it defaults to a comma (,).
-    If no clear delimiter candidate is found, it assumes a space () as the delimiter.
-    Returns the inferred delimiter character.</p>
-<p><strong>Key Points</strong></p>
-<p>The CSVParser class is designed to work with various delimiters, not just commas.
-It uses a heuristic approach to infer the delimiter. This class is intended to be used as a base for other classes that need to work with CSV files, such as the CSVFile class.</p>
-<h3 id="csvfile">CSVFile</h3>
-<p>The CSVFile class provides a range of methods for interacting with CSV files, including reading, parsing, converting, and writing data in various formats.</p>
-<p><strong>Initialization and Setup</strong></p>
-<p><code>__init__(self, filepath):</code>
-    Initializes the CSVFile object.
-    Inherits from CSVParser to get delimiter inference functionality.
-    Creates a DuckDBDatabase instance for data processing.
-    Raises a ValueError if the file extension is not a valid CSV extension.</p>
-<p><strong>Data Retrieval and Transformation</strong></p>
-<p><code>_csv_import_table_statement(self):</code>
-    Private method.
-    Generates the SQL statement to import the CSV data into a DuckDB table.
-    Uses all_varchar=True to preserve data integrity by importing all values as strings initially.</p>
-<p><code>select_from_table(self, sql_statement):</code>
-    Executes a user-provided SQL statement on the data loaded into the DuckDB table.
-    Allows for custom data transformations using SQL.
-    Returns the result as a Polars DataFrame.</p>
-<p><strong>File Information and Metadata</strong></p>
-<p><code>get_row_count_with_header(self):</code>
-    Returns the total number of rows in the CSV file, including the header row.</p>
-<p><code>get_row_count_without_header(self):</code>
-    Returns the number of data rows in the CSV file (excluding the header).</p>
-<p><code>get_attributes(self):</code>
-    Generates a dictionary of CSV file attributes: delimiter, quotechar, escapechar, doublequote, newline_delimiter, skipinitialspace, quoting (using CSV dialect sniffing) row_count_with_header, row_count_without_header columns (a dictionary mapping column names to data types, currently all set to 'VARCHAR') and column_count.</p>
-<p><code>get_columns(self):</code>
-    Returns the columns dictionary from get_attributes().</p>
-<p><code>get_columns_string(self):</code>
-    Returns the first row of the CSV file as a string, representing the column headers.</p>
-<p><code>get_columns_byte_string(self):</code>
-    Returns the first row (column headers) as a byte string.</p>
-<p><code>get_column_count(self):</code>
-    Returns the number of columns in the CSV file.</p>
-<p><code>get_quotechar(self):</code>
-    Returns the quote character used in the CSV file.</p>
-<p><code>get_escapechar(self):</code>
-    Returns the escape character used in the CSV file.</p>
-<p><code>get_newline_delimiter(self):</code>
-    Returns the newline delimiter used in the CSV file.</p>
-<p><strong>Data Conversion and Export</strong></p>
-<p>to_dicts(self):
-    Reads the CSV data and returns it as a list of dictionaries, where each dictionary represents a row.</p>
-<p><code>to_dataframe(self):</code>
-    Reads the CSV data into a Polars DataFrame using DuckDB for efficient processing.</p>
-<p><code>to_json(self):</code>
-    Converts the CSV data to a JSON string (using Polars DataFrame's JSON conversion). Prints a warning if the file is large to indicate potential memory issues.</p>
-<p><code>to_json_newline_delimited(self):</code>
-    Converts the CSV data to newline-delimited JSON (JSON Lines format).</p>
-<p><code>write_avro(self):</code>
-    Writes the data to an Avro file using Polars DataFrame's Avro writing capabilities.</p>
-<p><code>write_csv(self):</code>
-    Writes the data to a CSV file using DuckDB's COPY statement.</p>
-<p><code>write_json(self):</code>
-    Writes the data to a JSON file using DuckDB's COPY statement (output as a JSON array).</p>
-<p><code>write_json_newline_delimited(self):</code>
-    Writes the data to a newline-delimited JSON file using DuckDB.</p>
-<p><code>write_parquet(self):</code>
-    Writes the data to a Parquet file using DuckDB.</p>
-<p><code>write_excel(self):</code>
-    Writes the data to an Excel file using DuckDB and its spatial extensions.</p>
-<p><strong>Key Points</strong></p>
-<p>The CSVFile class leverages DuckDB for efficient data processing and format conversions.
-It provides a variety of methods for accessing file metadata, converting data formats, and writing data to different file types.
-The use of Polars DataFrames offers flexibility and performance for data manipulation.</p>
+<h2 id="core-classes">Core Classes</h2>
+<h3 id="fileproperties">FileProperties</h3>
+<p><strong>Description</strong>: A base class providing essential properties and methods for working with files.</p>
+<p><strong>Properties</strong></p>
+<p><code>filepath (str):</code> The full path to the file.</p>
+<p><code>filename (str):</code> The name of the file, without the directory path.</p>
+<p><code>extension (str):</code> The file extension, including the leading dot (e.g., ".csv").</p>
+<p><code>extension_string (str):</code> The file extension without the leading dot (e.g., "csv").</p>
+<p><code>size_in_bytes (int):</code> The size of the file in bytes.</p>
+<p><code>size_in_kb (float):</code> The size of the file in kilobytes.</p>
+<p><code>size_in_mb (float):</code> The size of the file in megabytes.</p>
+<p><code>size_in_gb (float):</code> The size of the file in gigabytes.</p>
+<p><code>size_in_tb (float):</code> The size of the file in terabytes.</p>
+<p><code>is_structured (bool):</code> True if the file is considered structured (based on extension).</p>
+<p><code>is_semi_structured (bool):</code> True if the file is considered semi-structured (based on extension).</p>
+<p><code>is_unstructured (bool):</code> True if the file is considered unstructured (based on extension).</p>
+<p><code>is_standard (bool):</code> True if the file is a standard file type (based on extension).</p>
+<p><code>is_proprietary (bool):</code> True if the file is a proprietary file type (based on extension).</p>
+<p><code>is_csv (bool):</code> True if the file is a CSV file (based on extension).</p>
+<p><code>is_excel (bool):</code> True if the file is an Excel file (based on extension).</p>
+<p><code>is_apache (bool):</code> True if the file is an Apache file (like Parquet or Avro) (based on extension).</p>
+<p><code>is_empty (bool):</code> True if the file size is 0 bytes.</p>
+<p><code>is_large (bool):</code> True if the file size is 1 GB or larger.</p>
+<p><code>is_tabular (bool):</code> True if the file is a tabular data format (CSV, Excel, TSV).</p>
+<h3 id="csvproperties">CSVProperties</h3>
+<p><strong>Description:</strong> Extends FileProperties with properties and methods specific to CSV files.</p>
+<p><strong>Properties</strong></p>
+<p><code>first_row (str):</code> The content of the first row in the CSV file.</p>
+<p><code>delimiter (str):</code> The delimiter used to separate values in the CSV file (inferred).</p>
+<p><code>row_count_with_header (int):</code> The total number of rows in the CSV file, including the header row.</p>
+<p><code>row_count_without_header (int):</code> The total number of rows in the CSV file, excluding the header row.</p>
+<p><code>columns (list):</code> A list of column names from the CSV file's header.</p>
+<p><code>columns_string (str):</code> A comma-separated string of column names.</p>
+<p><code>columns_byte_string (bytes):</code> A byte string representation of the comma-separated column names.</p>
+<p><code>column_count (int):</code> The number of columns in the CSV file.</p>
+<p><code>quotechar (str):</code> The character used for quoting fields in the CSV file.</p>
+<p><code>escapechar (str):</code> The character used for escaping characters in the CSV file.</p>
+<p><code>newline_delimiter (str):</code> The character(s) used to represent a newline in the CSV file.</p>
+<h2 id="csv-reader-and-writer-classes">CSV Reader and Writer Classes</h2>
+<h3 id="properties"><strong>Properties</strong></h3>
+<p>All of the CSVReader and CSVWriter classes in this section extends the <code>CSVProperties</code> class.</p>
+<h3 id="csvreaderduckdbengine">CSVReaderDuckDBEngine</h3>
+<p><strong>Description:</strong> Reads CSV files and converts them into various in-memory data objects using DuckDB.</p>
+<p><strong>Class Parameter</strong>: <code>filepath</code> (str): The path to the CSV file to be read and converted.</p>
+<p><strong>Description:</strong> Initializes the CSVReaderDuckDBEngine class.</p>
+<p><strong>Instance Methods</strong></p>
+<h4 id="get_sample"><code>get_sample()</code></h4>
+<p><strong>Description:</strong> Prints a sample of the CSV file to the console, providing a glimpse into its contents and structure.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> None</p>
+<h4 id="to_dataframe"><code>to_dataframe()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file and converts it into a Polars DataFrame.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> A Polars DataFrame representing the CSV data.</p>
+<h4 id="to_arrow_table"><code>to_arrow_table()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file and converts it into a PyArrow Table.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> A PyArrow Table representing the CSV data.</p>
+<h4 id="to_dicts"><code>to_dicts()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file and converts it into a list of dictionaries, where each dictionary represents a row in the CSV.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> A list of dictionaries representing the CSV data.</p>
+<h3 id="csvreaderpolarsengine">CSVReaderPolarsEngine</h3>
+<p><strong>Description:</strong> Reads CSV files and converts them into various in-memory data objects using Polars.</p>
+<p><strong>Class Parameter</strong>: <code>filepath</code> (str): The path to the CSV file to be read and converted.</p>
+<h4 id="get_sample_1"><code>get_sample()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file and returns a sample DataFrame with a limited number of rows (defined by DATAFRAME_SAMPLE_ROWS).</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> A Polars DataFrame containing a sample of the CSV data.</p>
+<h4 id="to_dataframe_1"><code>to_dataframe()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file and converts it into a Polars DataFrame.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> A Polars DataFrame representing the CSV data.</p>
+<h4 id="to_arrow_table_1"><code>to_arrow_table()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file, converts it into a Polars DataFrame, and then converts the DataFrame to a PyArrow Table.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> A PyArrow Table representing the CSV data.</p>
+<h4 id="to_dicts_1"><code>to_dicts()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file, converts it into a Polars DataFrame, and then converts the DataFrame to a list of dictionaries.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> A list of dictionaries representing the CSV data.</p>
+<h3 id="csvwriterduckdbengine">CSVWriterDuckDBEngine</h3>
+<p><strong>Description:</strong> Converts CSV files to various other supported file types using DuckDB.</p>
+<p><strong>Class Parameter</strong>: <code>filepath</code> (str): The path to the CSV file to be read and converted.</p>
+<p><strong>Description:</strong> Initializes the CSVWriterDuckDBEngine class.</p>
+<p><strong>Instance Methods</strong></p>
+<h4 id="write_csv"><code>write_csv()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file using DuckDB and writes it to a new CSV file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output CSV file. If not provided, a default filename will be used.</p>
+<h4 id="write_excel"><code>write_excel()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file using DuckDB and writes it to an Excel file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output Excel file. If not provided, a default filename will be used.</p>
+<h4 id="write_json"><code>write_json()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file using DuckDB and writes it to a JSON file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output JSON file. If not provided, a default filename will be used.</p>
+<h4 id="write_json_newline_delimited"><code>write_json_newline_delimited()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file using DuckDB and writes it to a JSON Lines (newline-delimited JSON) file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output JSON Lines file. If not provided, a default filename will be used.</p>
+<h4 id="write_parquet"><code>write_parquet()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file using DuckDB and writes it to a Parquet file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output Parquet file. If not provided, a default filename will be used.</p>
+<h3 id="csvwriterpolarsengine">CSVWriterPolarsEngine</h3>
+<p><strong>Description:</strong> Writes data from various sources to CSV files using Polars.</p>
+<p><strong>Class Parameter</strong>: <code>filepath</code> (str): The path to the CSV file to be read and converted.</p>
+<p><strong>Instance Methods</strong></p>
+<h4 id="write_csv_1"><code>write_csv()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file, converts it to a Polars DataFrame, and writes the DataFrame to a new CSV file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output CSV file. If not provided, a default filename will be used.</p>
+<h4 id="write_excel_1"><code>write_excel()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file, converts it to a Polars DataFrame, and writes the DataFrame to an Excel file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output Excel file. If not provided, a default filename will be used.</p>
+<h4 id="write_json_1"><code>write_json()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file, converts it to a Polars DataFrame, and writes the DataFrame to a JSON file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output JSON file. If not provided, a default filename will be used.</p>
+<h4 id="write_json_newline_delimited_1"><code>write_json_newline_delimited()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file, converts it to a Polars DataFrame, and writes the DataFrame to a JSON Lines (newline-delimited JSON) file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output JSON Lines file. If not provided, a default filename will be used.</p>
+<h4 id="write_parquet_1"><code>write_parquet()</code></h4>
+<p><strong>Description:</strong> Reads the CSV file, converts it to a Polars DataFrame, and writes the DataFrame to a Parquet file.</p>
+<p><strong>Parameters:</strong>
+<code>out_filename (str, optional):</code> The desired filename for the output Parquet file. If not provided, a default filename will be used.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../examples/" class="btn btn-neutral float-left" title="Usage Examples"><span class="icon icon-circle-arrow-left"></span> Previous</a>
     </div>
 
   <hr/>
@@ -304,7 +300,7 @@ The use of Polars DataFrames offers flexibility and performance for data manipul
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../examples/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
   </span>
