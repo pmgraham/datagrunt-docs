@@ -43,10 +43,34 @@
                 <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../guidance/">General Guidance</a>
+                </li>
+              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Usage Examples</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#get-csv-delimiter">Get CSV Delimiter</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#manually-set-csv-delimiter">Manually Set CSV Delimiter</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sample-csv">Sample CSV</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#read-csv-file-duckdb">Read CSV File DuckDB</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#read-csv-file-polars">Read CSV File Polars</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#write-csv-to-json-duckdb">Write CSV To JSON DuckDB</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#write-csv-to-json-polars">Write CSV To JSON Polars</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datagrunt-with-pandas">Datagrunt With Pandas</a>
+    </li>
     </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../roadmap/">Roadmap</a>
                 </li>
               </ul>
               <ul>
@@ -77,12 +101,80 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="usage-examples">Usage Examples</h2>
+<h3 id="get-csv-delimiter">Get CSV Delimiter</h3>
+<pre><code class="language-python">from datagrunt.core.fileproperties import CSVProperties
+
+csv_file = 'myfile.csv'
+dg = CSVProperties(csv_file)
+dg.delimiter # optionally call .encode() on the delimiter to return a bytestring
+</code></pre>
+<h3 id="manually-set-csv-delimiter">Manually Set CSV Delimiter</h3>
+<pre><code class="language-python">from datagrunt.core.fileproperties import CSVProperties
+
+csv_file = 'myfile.csv'
+dg = CSVProperties(csv_file)
+dg.delimiter = ',' # override the inferred delimiter
+</code></pre>
+<h3 id="sample-csv">Sample CSV</h3>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReaderDuckDBEngine, CSVReaderPolarsEngine
+
+csv_file = 'myfile.csv'
+
+# Sample using DuckDB
+CSVReaderDuckDBEngine(csv_file).get_sample() # automatically prints to screen
+
+# Samole using Polars
+CSVReaderPolarsEngine(csv_file).get_sample() # automatically prints to screen
+</code></pre>
+<h3 id="read-csv-file-duckdb">Read CSV File DuckDB</h3>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReaderDuckDBEngine
+
+csv_file = 'myfile.csv'
+dg = CSVReaderDuckDBEngine(csv_file)
+df = dg.to_dataframe()
+</code></pre>
+<h3 id="read-csv-file-polars">Read CSV File Polars</h3>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReaderPolarsEngine
+
+csv_file = 'myfile.csv'
+dg = CSVReaderPolarsEngine(csv_file)
+df = dg.to_dataframe()
+</code></pre>
+<h3 id="write-csv-to-json-duckdb">Write CSV To JSON DuckDB</h3>
+<pre><code class="language-python">from datagrunt.csvfile import CSVWriterDuckDBEngine
+
+csv_file = 'myfile.csv'
+dg = CSVWriterDuckDBEngine(csv_file) # you don't have to load a reader of all you need to do is convert the file
+dg.write_json() # you may optionally pass in a filename
+
+### Writefrom CSV To JSON Lines DuckDB
+dg.write_json_newline_delimited() # if you pass in a filename, ensure it ends with .jsonl
+</code></pre>
+<h3 id="write-csv-to-json-polars">Write CSV To JSON Polars</h3>
+<pre><code class="language-python">from datagrunt.csvfile import CSVWriterPolarsEngine
+
+csv_file = 'myfile.csv'
+dg = CSVReaderPolarsEngine(csv_file)
+dg.write_json() # you may optionally pass in a filename
+
+### Writefrom CSV To JSON Lines DuckDB
+dg.write_json_newline_delimited() # if you pass in a filename, ensure it ends with .jsonl
+</code></pre>
+<h3 id="datagrunt-with-pandas">Datagrunt With Pandas</h3>
+<pre><code class="language-python">import pandas as pd
+from datagrunt.core.fileproperties import CSVProperties
+
+csv_file = 'myfile.csv'
+dg_delimiter = CSVProperties(csv_file).delimiter
+
+df = pd.read_csv(csv_file, delimiter=dg_delimiter)
+</code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../api/" class="btn btn-neutral float-right" title="API">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../guidance/" class="btn btn-neutral float-left" title="General Guidance"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../roadmap/" class="btn btn-neutral float-right" title="Roadmap">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -105,10 +197,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../guidance/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../api/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../roadmap/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
