@@ -44,25 +44,19 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#key-features">Key Features</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#about-duckdb-and-polars">About DuckDB and Polars</a>
+    <li class="toctree-l2"><a class="reference internal" href="#why-datagrunt">Why Datagrunt?</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#what-datagrunt-is-not">What Datagrunt Is Not</a>
+    <li class="toctree-l2"><a class="reference internal" href="#power-tools-under-the-hood">Power Tools Under the Hood</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#complete-choice-and-freedom">Complete Choice and Freedom</a>
+    <li class="toctree-l2"><a class="reference internal" href="#datagrunts-role">Datagrunt's Role</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#flexibility-and-integration">Flexibility and Integration</a>
     </li>
     </ul>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="guidance/">General Guidance</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="examples/">Usage Examples</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="roadmap/">Roadmap</a>
                 </li>
               </ul>
               <ul>
@@ -93,35 +87,56 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="welcome-to-datagrunt">Welcome to Datagrunt!</h1>
-<p>Datagrunt is a lightweight CSV processing library that simplifies handling CSV files and converting them into various formats such as Excel, JSON, JSON Newline Delimited, and Parquet. It eliminates repetitive coding tasks when working with CSVs, empowering data analysts, engineers, and scientists to focus on insights rather than tedious data wrangling.</p>
+<p>Datagrunt is a lightweight, open-source Python library designed to streamline CSV file handling and conversion. By automating common tasks, Datagrunt allows data professionals to focus on analysis rather than data wrangling.</p>
 <h2 id="key-features">Key Features</h2>
 <ul>
-<li>
-<p><strong>Intelligent Delimiter Inference:</strong> Datagrunt automatically detects and applies the correct delimiter for CSV files using a custom algorithm powered by DuckDB.</p>
-</li>
-<li>
-<p><strong>Seamless Data Processing:</strong> Leverage DuckDB and Polars to perform data processing tasks directly on CSV data.</p>
-</li>
-<li>
-<p><strong>Flexible Transformation:</strong> Easily convert processed CSV data into different formats to meet your needs.</p>
-</li>
-<li>
-<p><strong>Pythonic API:</strong> Enjoy a clean and intuitive API that seamlessly integrates into existing Python workflows. </p>
-</li>
+<li><strong>Smart Delimiter Detection:</strong> Automatically identifies the correct CSV delimiter using a custom DuckDB-powered algorithm.</li>
+<li><strong>Efficient Data Processing:</strong> Utilizes DuckDB and Polars for high-performance CSV data manipulation.</li>
+<li><strong>Multiple Output Formats:</strong> Easily convert CSV data to Excel, JSON, JSON Newline Delimited, and Parquet.</li>
+<li><strong>User-Friendly API:</strong> Integrates seamlessly with existing Python workflows.</li>
 </ul>
-<h2 id="about-duckdb-and-polars">About DuckDB and Polars</h2>
-<p>Processing CSV files, especially large ones locally or in resource-constrained data pipelines, can be challenging. Python, while powerful, is not known for its speed in heavy data processing tasks. DuckDB and Polars address this limitation.</p>
-<p><a href="https://duckdb.org">DuckDB</a> is an extremely fast in-process analytical database that's easy to use with Python through its API. It provides a simple interface for processing CSV files and offers powerful local analytics capabilities.</p>
-<p><a href="https://pola.rs">Polars</a> is a multi-threaded query engine written in Rust, known for its efficient parallelism and high performance on modern processors. Both DuckDB are easy to use and open source.</p>
-<h2 id="what-datagrunt-is-not">What Datagrunt Is Not</h2>
-<p>Datagrunt is not an extension of DuckDB or Polars, nor is it designed to handle every data processing task. Its core purpose is to accurately infer CSV delimiters and expose them to classes that offer helper methods for common data tasks. Datagrunt helps load CSV files into Polars dataframes or convert them into new formats. It's not a replacement for DuckDB, Pandas, or Polars.</p>
-<h2 id="complete-choice-and-freedom">Complete Choice and Freedom</h2>
-<p>Datagrunt doesn't restrict you to the features exposed through its library. By default, it loads data into Polars dataframes when returning objects in memory, but you can convert them into Pandas dataframes using the <code>to_pandas</code> method. While some users may only need Datagrunt for delimiter inference, it provides helper classes and methods that can be used as desired. You can always leverage Datagrunt's output in other contexts within the same script or application.</p>
+<h2 id="why-datagrunt">Why Datagrunt?</h2>
+<p>Processing large CSV files locally or in resource-constrained environments can be challenging. Datagrunt leverages the speed of DuckDB and Polars to overcome Python's limitations in heavy data processing tasks.</p>
+<h2 id="power-tools-under-the-hood">Power Tools Under the Hood</h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://duckdb.org">DuckDB</a></td>
+<td>Fast in-process analytical database with a simple Python API</td>
+</tr>
+<tr>
+<td><a href="https://pola.rs">Polars</a></td>
+<td>Multi-threaded query engine written in Rust, optimized for modern processors</td>
+</tr>
+</tbody>
+</table>
+<h2 id="datagrunts-role">Datagrunt's Role</h2>
+<p>Datagrunt is not an extension of DuckDB or Polars, nor a comprehensive data processing solution. Its primary functions are:</p>
+<ol>
+<li>Accurately inferring CSV delimiters</li>
+<li>Providing helper methods for common data tasks</li>
+<li>Facilitating CSV file loading into Polars dataframes</li>
+<li>Enabling conversion to various output formats</li>
+</ol>
+<h2 id="flexibility-and-integration">Flexibility and Integration</h2>
+<p>While Datagrunt uses Polars dataframes by default, it doesn't limit your options:</p>
+<ul>
+<li>Convert to Pandas dataframes using the <code>to_pandas</code> method</li>
+<li>Use Datagrunt's output in other contexts within your script or application</li>
+<li>Leverage only specific features (e.g., delimiter inference) as needed</li>
+</ul>
+<p>Datagrunt complements your existing data processing toolkit, offering helpful utilities without restricting your workflow choices.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="guidance/" class="btn btn-neutral float-right" title="General Guidance">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="examples/" class="btn btn-neutral float-right" title="Usage Examples">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -145,7 +160,7 @@
     
     
     
-      <span><a href="guidance/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="examples/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
@@ -165,5 +180,5 @@
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2024-09-05 04:55:04.429168+00:00
+Build Date UTC : 2024-09-10 13:27:08.953634+00:00
 -->

@@ -43,34 +43,52 @@
                 <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../guidance/">General Guidance</a>
-                </li>
-              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Usage Examples</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#get-csv-delimiter">Get CSV Delimiter</a>
+    <li class="toctree-l2"><a class="reference internal" href="#setting-the-processing-engine">Setting The Processing Engine</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#manually-set-csv-delimiter">Manually Set CSV Delimiter</a>
+    <li class="toctree-l2"><a class="reference internal" href="#working-with-csv-properties">Working with CSV Properties</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#get-csv-delimiter">Get CSV Delimiter</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#sample-csv">Sample CSV</a>
+    <li class="toctree-l3"><a class="reference internal" href="#manually-set-csv-delimiter">Manually Set CSV Delimiter</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#read-csv-file-duckdb">Read CSV File DuckDB</a>
+        </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#read-csv-file-polars">Read CSV File Polars</a>
+    <li class="toctree-l2"><a class="reference internal" href="#sampling-csv-data">Sampling CSV Data</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#write-csv-to-json-duckdb">Write CSV To JSON DuckDB</a>
+    <li class="toctree-l2"><a class="reference internal" href="#reading-csv-files">Reading CSV Files</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#using-duckdb">Using DuckDB</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#write-csv-to-json-polars">Write CSV To JSON Polars</a>
+    <li class="toctree-l3"><a class="reference internal" href="#using-polars">Using Polars</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#datagrunt-with-pandas">Datagrunt With Pandas</a>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#writing-csv-to-other-formats">Writing CSV to Other Formats</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#json-and-json-lines-with-duckdb">JSON and JSON Lines with DuckDB</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#json-and-json-lines-with-polars">JSON and JSON Lines with Polars</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#integration-with-pandas">Integration with Pandas</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#using-sql-to-query-csv-files">Using SQL To Query CSV Files</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#write-a-sql-query">Write a SQL Query</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#query-a-polars-dataframe">Query a Polars Dataframe</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#query-results-to-dataframe">Query Results To Dataframe</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#credits-and-references">Credits and References</a>
+    </li>
+        </ul>
     </li>
     </ul>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../roadmap/">Roadmap</a>
                 </li>
               </ul>
               <ul>
@@ -101,80 +119,468 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="usage-examples">Usage Examples</h2>
-<h3 id="get-csv-delimiter">Get CSV Delimiter</h3>
-<pre><code class="language-python">from datagrunt.core.fileproperties import CSVProperties
+<p>Datagrunt offers a variety of functionalities. Here are some common use cases to help you get started.</p>
+<h3 id="setting-the-processing-engine">Setting The Processing Engine</h3>
+<p>Datagrunt gives you two options for CSV file processing: DuckDB and Polars. You set the engine as follows:</p>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReader
 
 csv_file = 'myfile.csv'
-dg = CSVProperties(csv_file)
-dg.delimiter # optionally call .encode() on the delimiter to return a bytestring
+dg = CSVReader(csv_file) # by default engine is set to 'polars'.
 </code></pre>
-<h3 id="manually-set-csv-delimiter">Manually Set CSV Delimiter</h3>
-<pre><code class="language-python">from datagrunt.core.fileproperties import CSVProperties
+<p>Alternatively, you may set the processing engine to DuckDB by passing the 'duckdb' value for the engine param as follows:</p>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReader
 
 csv_file = 'myfile.csv'
-dg = CSVProperties(csv_file)
-dg.delimiter = ',' # override the inferred delimiter
+engine = 'duckdb'
+dg = CSVReader(csv_file, engine=engine)
 </code></pre>
-<h3 id="sample-csv">Sample CSV</h3>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReaderDuckDBEngine, CSVReaderPolarsEngine
+<p>The interface is the exact same for both engines. If you write your code using Polars, but want to change to DuckDB later, simply update the engine param when you instantiate the CSVReader class and leave the rest of your code untouched.</p>
+<p>The engine functionality works exactly the same way for the CSVWriter class as well. Here is an example using the Polars engine:</p>
+<pre><code class="language-python">from datagrunt.csvfile import CSVWriter
+
+csv_file = 'myfile.csv'
+dg = CSVWriter(csv_file)
+
+dg.write_json()
+</code></pre>
+<p>Here is an example using the DuckDB engine:</p>
+<pre><code class="language-python">from datagrunt.csvfile import CSVWriter
+
+csv_file = 'myfile.csv'
+engine = 'duckdb'
+dg = CSVWriter(csv_file, engine=engine)
+
+dg.write_json()
+</code></pre>
+<hr />
+<h3 id="working-with-csv-properties">Working with CSV Properties</h3>
+<h4 id="get-csv-delimiter">Get CSV Delimiter</h4>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReader
+
+csv_file = 'myfile.csv'
+csv_props = CSVReader(csv_file)
+delimiter = csv_props.delimiter
+# Optional: Use delimiter.encode() to return a bytestring
+</code></pre>
+<h4 id="manually-set-csv-delimiter">Manually Set CSV Delimiter</h4>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReader
+
+csv_file = 'myfile.csv'
+csv_props = CSVReader(csv_file)
+csv_props.delimiter = ','  # Override the inferred delimiter
+</code></pre>
+<hr />
+<h3 id="sampling-csv-data">Sampling CSV Data</h3>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReader
 
 csv_file = 'myfile.csv'
 
-# Sample using DuckDB
-CSVReaderDuckDBEngine(csv_file).get_sample() # automatically prints to screen
+# Sample using DuckDB (prints to screen automatically)
+CSVReader(csv_file, engine='duckdb').get_sample()
 
-# Samole using Polars
-CSVReaderPolarsEngine(csv_file).get_sample() # automatically prints to screen
+# Sample using Polars (prints to screen automatically)
+CSVReader(csv_file).get_sample()
 </code></pre>
-<h3 id="read-csv-file-duckdb">Read CSV File DuckDB</h3>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReaderDuckDBEngine
+<hr />
+<h3 id="reading-csv-files">Reading CSV Files</h3>
+<h4 id="using-duckdb">Using DuckDB</h4>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReader
 
 csv_file = 'myfile.csv'
-dg = CSVReaderDuckDBEngine(csv_file)
-df = dg.to_dataframe()
+engine = 'duckdb'
+duckdb_reader = CSVReader(csv_file, engine=engine)
+df_duckdb = duckdb_reader.to_dataframe()
 </code></pre>
-<h3 id="read-csv-file-polars">Read CSV File Polars</h3>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReaderPolarsEngine
+<h4 id="using-polars">Using Polars</h4>
+<pre><code class="language-python">from datagrunt.csvfile import CSVReader
 
 csv_file = 'myfile.csv'
-dg = CSVReaderPolarsEngine(csv_file)
-df = dg.to_dataframe()
+polars_reader = CSVReader(csv_file)
+df_polars = polars_reader.to_dataframe()
 </code></pre>
-<h3 id="write-csv-to-json-duckdb">Write CSV To JSON DuckDB</h3>
-<pre><code class="language-python">from datagrunt.csvfile import CSVWriterDuckDBEngine
+<hr />
+<h3 id="writing-csv-to-other-formats">Writing CSV to Other Formats</h3>
+<h4 id="json-and-json-lines-with-duckdb">JSON and JSON Lines with DuckDB</h4>
+<pre><code class="language-python">from datagrunt.csvfile import CSVWriter
 
 csv_file = 'myfile.csv'
-dg = CSVWriterDuckDBEngine(csv_file) # you don't have to load a reader of all you need to do is convert the file
-dg.write_json() # you may optionally pass in a filename
+engine = 'duckdb'
+duckdb_writer = CSVWriter(csv_file, engine=engine)
 
-### Writefrom CSV To JSON Lines DuckDB
-dg.write_json_newline_delimited() # if you pass in a filename, ensure it ends with .jsonl
+# Write to JSON
+duckdb_writer.write_json()  # Optional: Specify output filename
+
+# Write to JSON Lines
+duckdb_writer.write_json_newline_delimited()
 </code></pre>
-<h3 id="write-csv-to-json-polars">Write CSV To JSON Polars</h3>
-<pre><code class="language-python">from datagrunt.csvfile import CSVWriterPolarsEngine
+<h4 id="json-and-json-lines-with-polars">JSON and JSON Lines with Polars</h4>
+<pre><code class="language-python">from datagrunt.csvfile import CSVWriter
 
 csv_file = 'myfile.csv'
-dg = CSVReaderPolarsEngine(csv_file)
-dg.write_json() # you may optionally pass in a filename
+polars_writer = CSVWriter(csv_file)
 
-### Writefrom CSV To JSON Lines DuckDB
-dg.write_json_newline_delimited() # if you pass in a filename, ensure it ends with .jsonl
+# Write to JSON
+polars_writer.write_json()  # Optional: Specify output filename
+
+# Write to JSON Lines
+polars_writer.write_json_newline_delimited()  # Use .jsonl extension if specifying filename
 </code></pre>
-<h3 id="datagrunt-with-pandas">Datagrunt With Pandas</h3>
+<h4 id="integration-with-pandas">Integration with Pandas</h4>
 <pre><code class="language-python">import pandas as pd
-from datagrunt.core.fileproperties import CSVProperties
+from datagrunt.csvfile import CSVReader
 
 csv_file = 'myfile.csv'
-dg_delimiter = CSVProperties(csv_file).delimiter
+csv_props = CSVReader(csv_file)
 
-df = pd.read_csv(csv_file, delimiter=dg_delimiter)
+df_polars = csv_props.to_dataframe() # returns Polars dataframe automatically
+
+# convert Polars dataframe to Pandas
+df_pandas_from_polars = df_polars.to_pandas()
+
+# Use Datagrunt to get the correct delimiter for Pandas
+df_pandas = pd.read_csv(csv_file, delimiter=csv_props.delimiter)
 </code></pre>
+<hr />
+<h3 id="using-sql-to-query-csv-files">Using SQL To Query CSV Files</h3>
+<p>It's recommened to use the <code>duckdb</code> engine when querying CSV files. These query examples will work with the <code>polars</code> engine exactly the same way as presented, but Datagrunt converts all data to strings when using <code>duckdb</code> and it better preserves the integrity of the data due to not coercing into inferred datatypes. You'll see below that you can use SQL and you can optionally cast columns to different data types as needed.</p>
+<p>For example, you'll notice there are postal codes in the data below. Usually, postal codes are read as integers by most processing engines. Many postal codes begin with a 0. If postal codes are read as an integer, the leading 0 will be dropped erroneously. This can be fixed by using the lpad function in Python, but we'd prefer to present the data in its original form as a string as opposed to having the data altered due to data type conversion.</p>
+<pre><code class="language-python">csv_file = 'electric_vehicle_population_data.csv'
+engine = 'duckdb'
+
+dg = CSVReader(csv_file, engine=engine) # set duckdb as the processing engine.
+
+df = dg.to_dataframe() # only a sample output below is represented.
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>VIN (1-10)</th>
+<th>County</th>
+<th>City</th>
+<th>State</th>
+<th>DOL Vehicle ID</th>
+<th>Vehicle Location</th>
+<th>Electric Utility</th>
+<th>2020 Census Tract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5YJSA1E28K</td>
+<td>Snohomish</td>
+<td>Mukilteo</td>
+<td>WA</td>
+<td>236424583</td>
+<td>POINT (-122.29943 47.912654)</td>
+<td>PUGET SOUND ENERGY INC</td>
+<td>53061042001</td>
+</tr>
+<tr>
+<td>1C4JJXP68P</td>
+<td>Yakima</td>
+<td>Yakima</td>
+<td>WA</td>
+<td>249905295</td>
+<td>POINT (-120.468875 46.6046178)</td>
+<td>PACIFICORP</td>
+<td>53077001601</td>
+</tr>
+<tr>
+<td>WBY8P6C05L</td>
+<td>Kitsap</td>
+<td>Kingston</td>
+<td>WA</td>
+<td>260917289</td>
+<td>POINT (-122.5178351 47.7981436)</td>
+<td>PUGET SOUND ENERGY INC</td>
+<td>53035090102</td>
+</tr>
+<tr>
+<td>JTDKARFP1J</td>
+<td>Kitsap</td>
+<td>Port Orchard</td>
+<td>WA</td>
+<td>186410087</td>
+<td>POINT (-122.6530052 47.4739066)</td>
+<td>PUGET SOUND ENERGY INC</td>
+<td>53035092802</td>
+</tr>
+<tr>
+<td>5UXTA6C09N</td>
+<td>Snohomish</td>
+<td>Everett</td>
+<td>WA</td>
+<td>186076915</td>
+<td>POINT (-122.2032349 47.8956271)</td>
+<td>PUGET SOUND ENERGY INC</td>
+<td>53061041605</td>
+</tr>
+<tr>
+<td>JTMAB3FVXR</td>
+<td>Snohomish</td>
+<td>Snohomish</td>
+<td>WA</td>
+<td>262809249</td>
+<td>POINT (-122.0483457 47.9435765)</td>
+<td>PUGET SOUND ENERGY INC</td>
+<td>53061052402</td>
+</tr>
+<tr>
+<td>7FCTGAAA7P</td>
+<td>Pierce</td>
+<td>Orting</td>
+<td>WA</td>
+<td>252195450</td>
+<td>POINT (-122.1977914 47.0948565)</td>
+<td>PUGET SOUND ENERGY INC||CITY O...</td>
+<td>53053070100</td>
+</tr>
+<tr>
+<td>1V2GNPE87P</td>
+<td>Spokane</td>
+<td>Spokane</td>
+<td>WA</td>
+<td>227314790</td>
+<td>POINT (-117.428902 47.658268)</td>
+<td>MO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="write-a-sql-query">Write a SQL Query</h4>
+<pre><code class="language-python">query = f&quot;&quot;&quot;
+WITH core AS (
+    SELECT
+        City AS city,
+        &quot;VIN (1-10)&quot; AS vin
+    FROM {dg.db_table}
+)
+SELECT
+    city,
+    COUNT(vin) AS vehicle_count
+FROM core
+GROUP BY 1
+ORDER BY 2 DESC
+&quot;&quot;&quot;
+
+dg.query_data(query)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>city</th>
+<th>vehicle_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Seattle</td>
+<td>32602</td>
+</tr>
+<tr>
+<td>Bellevue</td>
+<td>9960</td>
+</tr>
+<tr>
+<td>Redmond</td>
+<td>7165</td>
+</tr>
+<tr>
+<td>Vancouver</td>
+<td>7081</td>
+</tr>
+<tr>
+<td>Bothell</td>
+<td>6602</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>Vista</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Tempe</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Green Bay</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Waverly</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Creston</td>
+<td>1</td>
+</tr>
+<tr>
+<td>764 rows (20 shown)   2 columns</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="query-a-polars-dataframe">Query a Polars Dataframe</h4>
+<p><strong>Note:</strong> in the code example below that we are not interpolating the dataframe variable. We are referencing it by embedding it in the string.</p>
+<pre><code class="language-python">df = dg.to_dataframe()
+
+df_query = &quot;&quot;&quot;
+WITH core AS (
+    SELECT
+        City AS city,
+        &quot;VIN (1-10)&quot; AS vin
+    FROM df
+)
+SELECT
+    city,
+    COUNT(vin) AS vehicle_count
+FROM core
+GROUP BY 1
+ORDER BY 2 DESC
+&quot;&quot;&quot;
+
+dg.query_data(df_query)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>city</th>
+<th>vehicle_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Seattle</td>
+<td>32602</td>
+</tr>
+<tr>
+<td>Bellevue</td>
+<td>9960</td>
+</tr>
+<tr>
+<td>Redmond</td>
+<td>7165</td>
+</tr>
+<tr>
+<td>Vancouver</td>
+<td>7081</td>
+</tr>
+<tr>
+<td>Bothell</td>
+<td>6602</td>
+</tr>
+<tr>
+<td>Kirkland</td>
+<td>5883</td>
+</tr>
+<tr>
+<td>Renton</td>
+<td>5835</td>
+</tr>
+<tr>
+<td>Sammamish</td>
+<td>5795</td>
+</tr>
+<tr>
+<td>Olympia</td>
+<td>4830</td>
+</tr>
+<tr>
+<td>Tacoma</td>
+<td>4204</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>Lamont</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Dickinson</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Saratoga Springs</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Gunpowder</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Holden Village</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Yorktown</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Ridgecrest</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Startup</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Sacramento</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Washtucna</td>
+<td>1</td>
+</tr>
+<tr>
+<td>764 rows (20 shown)   2 columns</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="query-results-to-dataframe">Query Results To Dataframe</h4>
+<p>In the previous example we demonstrated querying a Polars dataframe by using SQL. Rather than simply returning results, you may convert the results to any type of dataframe you wish.</p>
+<pre><code class="language-python">df = dg.to_dataframe()
+
+df_query = &quot;&quot;&quot;
+WITH core AS (
+    SELECT
+        City AS city,
+        &quot;VIN (1-10)&quot; AS vin
+    FROM df
+)
+SELECT
+    city,
+    COUNT(vin) AS vehicle_count
+FROM core
+GROUP BY 1
+ORDER BY 2 DESC
+&quot;&quot;&quot;
+
+df_polars = dg.query_data(df_query).pl() # return a Polars dataframe
+df_pandas =  dg.query_data(df_query).to_df() # return a Pandas dataframe
+</code></pre>
+<h4 id="credits-and-references">Credits and References</h4>
+<p>The SQL query functionality within Datagrunt is powered by <a href="https://duckdb.org/">DuckDB</a>.
+The dataset used in these code examples is sourced from <a href="https://catalog.data.gov/dataset/electric-vehicle-population-data/resource/fa51be35-691f-45d2-9f3e-535877965e69">Electric Vehicle Population Data</a>.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../guidance/" class="btn btn-neutral float-left" title="General Guidance"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../roadmap/" class="btn btn-neutral float-right" title="Roadmap">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api/" class="btn btn-neutral float-right" title="API">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -197,10 +603,10 @@ df = pd.read_csv(csv_file, delimiter=dg_delimiter)
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../guidance/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../roadmap/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../api/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
