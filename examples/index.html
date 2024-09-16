@@ -244,7 +244,7 @@ df_pandas = pd.read_csv(csv_file, delimiter=csv_props.delimiter)
 <h3 id="using-sql-to-query-csv-files">Using SQL To Query CSV Files</h3>
 <p>It's recommened to use the <code>duckdb</code> engine when querying CSV files using SQL. These query examples will work with the <code>polars</code> engine exactly the same way as presented, but Datagrunt converts all data to strings when using <code>duckdb</code> and it better preserves the integrity of the data due to not coercing into inferred datatypes. You'll see below that you can use SQL and you can optionally cast columns to different data types as needed.</p>
 <p>In the below example there are postal codes in the data. Usually, postal codes are read as integers by most processing engines. However, many postal codes begin with a leading 0, and in that case if postal codes are read as an integer, the leading 0 will be dropped erroneously. This can be fixed by using the <code>zfill</code> function in Python, but we'd prefer to present the data in its original form as a string as opposed to having the data altered due to data type conversion.</p>
-<p>Zipcodes are only one of many examples where data integrity may be lost due to type conversions. Therefore, we do our best to preserve the data in its original state, even if it means we have to type case downstream.</p>
+<p>Zipcodes are only one of many examples where data integrity may be lost due to type conversions. Therefore, we do our best to preserve the data in its original state, even if it means we have to type cast downstream.</p>
 <pre><code class="language-python">from datagrunt import CSVReader
 
 csv_file = 'electric_vehicle_population_data.csv'
