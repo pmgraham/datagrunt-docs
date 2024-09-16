@@ -66,17 +66,21 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#csvreader">CSVReader</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#methods">Methods</a>
+    <li class="toctree-l3"><a class="reference internal" href="#properties-user-provided">Properties (User provided)</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#properties_1">Properties</a>
+    <li class="toctree-l3"><a class="reference internal" href="#properties-built-into-the-class">Properties (Built into the class)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#methods">Methods</a>
     </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#csvwriter">CSVWriter</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#methods_1">Methods</a>
+    <li class="toctree-l3"><a class="reference internal" href="#properties-user-provided_1">Properties (User provided)</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#properties_2">Properties</a>
+    <li class="toctree-l3"><a class="reference internal" href="#properties-built-into-the-class_1">Properties (Built into the class)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#methods_1">Methods</a>
     </li>
         </ul>
     </li>
@@ -123,26 +127,26 @@
 </ul>
 <h4 id="properties">Properties</h4>
 <ul>
-<li><code>filepath</code>: Path to the file</li>
-<li><code>filename</code>: Name of the file</li>
-<li><code>extension</code>: File extension (with dot)</li>
-<li><code>extension_string</code>: File extension (without dot)</li>
-<li><code>size_in_bytes</code>: File size in bytes</li>
-<li><code>size_in_kb</code>: File size in kilobytes</li>
-<li><code>size_in_mb</code>: File size in megabytes</li>
-<li><code>size_in_gb</code>: File size in gigabytes</li>
-<li><code>size_in_tb</code>: File size in terabytes</li>
-<li><code>is_structured</code>: Boolean indicating if the file is structured</li>
-<li><code>is_semi_structured</code>: Boolean indicating if the file is semi-structured</li>
-<li><code>is_unstructured</code>: Boolean indicating if the file is unstructured</li>
-<li><code>is_standard</code>: Boolean indicating if the file has a standard format</li>
-<li><code>is_proprietary</code>: Boolean indicating if the file has a proprietary format</li>
-<li><code>is_csv</code>: Boolean indicating if the file is a CSV</li>
-<li><code>is_excel</code>: Boolean indicating if the file is an Excel file</li>
-<li><code>is_apache</code>: Boolean indicating if the file is an Apache formatted file</li>
-<li><code>is_empty</code>: Boolean indicating if the file is empty</li>
-<li><code>is_large</code>: Boolean indicating if the file is larger than or equal to 1 GB</li>
-<li><code>is_tabular</code>: Boolean indicating if the file is tabular</li>
+<li><code>filepath</code>: Path to the file.</li>
+<li><code>filename</code>: Name of the file without the full path.</li>
+<li><code>extension</code>: File extension (with dot).</li>
+<li><code>extension_string</code>: File extension (without dot).</li>
+<li><code>size_in_bytes</code>: File size in bytes.</li>
+<li><code>size_in_kb</code>: File size in kilobytes.</li>
+<li><code>size_in_mb</code>: File size in megabytes.</li>
+<li><code>size_in_gb</code>: File size in gigabytes.</li>
+<li><code>size_in_tb</code>: File size in terabytes.</li>
+<li><code>is_structured</code>: Boolean indicating if the file is structured data.</li>
+<li><code>is_semi_structured</code>: Boolean indicating if the file is semi-structured data.</li>
+<li><code>is_unstructured</code>: Boolean indicating if the file is unstructured data.</li>
+<li><code>is_standard</code>: Boolean indicating if the file has a standard (open and non proprietary) format.</li>
+<li><code>is_proprietary</code>: Boolean indicating if the file has a proprietary format.</li>
+<li><code>is_csv</code>: Boolean indicating if the file is a CSV.</li>
+<li><code>is_excel</code>: Boolean indicating if the file is an Excel file.</li>
+<li><code>is_apache</code>: Boolean indicating if the file is an Apache formatted file (Avro or Parquet).</li>
+<li><code>is_empty</code>: Boolean indicating if the file is empty.</li>
+<li><code>is_large</code>: Boolean indicating if the file is larger than or equal to 1 GB.</li>
+<li><code>is_tabular</code>: Boolean indicating if the file is tabular.</li>
 </ul>
 <hr />
 <h3 id="csvproperties">CSVProperties</h3>
@@ -150,19 +154,28 @@
 <h4 id="properties-in-addition-to-fileproperties">Properties (in addition to FileProperties)</h4>
 <ul>
 <li><code>delimiter</code>: The delimiter used in the CSV file. Delimiter is <strong>automatically inferred</strong> and may be optionally re-assigned by the user.</li>
-<li><code>row_count_with_header</code>: Number of rows including the header</li>
-<li><code>row_count_without_header</code>: Number of rows excluding the header</li>
-<li><code>columns</code>: List of column names</li>
-<li><code>columns_string</code>: Comma-separated string of column names</li>
-<li><code>columns_byte_string</code>: Byte string of comma-separated column names</li>
-<li><code>column_count</code>: Number of columns</li>
-<li><code>quotechar</code>: Quote character used in the CSV</li>
-<li><code>escapechar</code>: Escape character used in the CSV</li>
-<li><code>newline_delimiter</code>: Newline delimiter used in the CSV</li>
+<li><code>row_count_with_header</code>: Number of rows including the first line.</li>
+<li><code>row_count_without_header</code>: Number of rows excluding the first line.</li>
+<li><code>columns</code>: List of column names.</li>
+<li><code>columns_string</code>: Comma-separated string of column names.</li>
+<li><code>columns_byte_string</code>: Byte string of comma-separated column names.</li>
+<li><code>column_count</code>: Number of columns.</li>
+<li><code>quotechar</code>: Quote character used in the CSV.</li>
+<li><code>escapechar</code>: Escape character used in the CSV.</li>
+<li><code>newline_delimiter</code>: Newline delimiter used in the CSV.</li>
 </ul>
 <hr />
 <h3 id="csvreader">CSVReader</h3>
 <p>A class for reading and querying CSV files.</p>
+<h4 id="properties-user-provided">Properties (User provided)</h4>
+<ul>
+<li><code>filepath</code>: Path to the CSV file. Required and provided the user.</li>
+<li><code>engine</code>: The engine being used ('polars' or 'duckdb'). Optional. Default is 'polars'. Updated by the user as needed.</li>
+</ul>
+<h4 id="properties-built-into-the-class">Properties (Built into the class)</h4>
+<ul>
+<li><code>db_table</code>: The name of the table in DuckDB where the CSV data is imported for processing. Built into the class with no intervention from the user required.</li>
+</ul>
 <h4 id="methods">Methods</h4>
 <ul>
 <li><code>__init__(filepath: str, engine: str = 'polars') -&gt; None</code></li>
@@ -221,14 +234,18 @@
 </ul>
 </li>
 </ul>
-<h4 id="properties_1">Properties</h4>
-<ul>
-<li><code>db_table</code>: The name of the table in DuckDB where the CSV data is imported.</li>
-<li><code>engine</code>: The engine being used ('polars' or 'duckdb').</li>
-</ul>
 <hr />
 <h3 id="csvwriter">CSVWriter</h3>
 <p>A class for converting CSV files to various other supported file types.</p>
+<h4 id="properties-user-provided_1">Properties (User provided)</h4>
+<ul>
+<li><code>filepath</code>: Path to the CSV file. Required and provided the user.</li>
+<li><code>engine</code>: The engine being used ('polars' or 'duckdb'). Optional. Default is 'polars'. Updated by the user as needed.</li>
+</ul>
+<h4 id="properties-built-into-the-class_1">Properties (Built into the class)</h4>
+<ul>
+<li><code>db_table</code>: The name of the table in DuckDB where the CSV data is imported for processing. Built into the class with no intervention from the user required.</li>
+</ul>
 <h4 id="methods_1">Methods</h4>
 <ul>
 <li>
@@ -298,11 +315,6 @@
 <li>Returns: The path of the written Parquet file.</li>
 </ul>
 </li>
-</ul>
-<h4 id="properties_2">Properties</h4>
-<ul>
-<li><code>db_table</code>: The name of the table in DuckDB where the CSV data is imported.</li>
-<li><code>engine</code>: The engine being used ('polars' or 'duckdb').</li>
 </ul>
               
             </div>

@@ -122,13 +122,13 @@
 <p>Datagrunt offers a variety of functionalities. Here are some common use cases to help you get started.</p>
 <h3 id="setting-the-processing-engine">Setting The Processing Engine</h3>
 <p>Datagrunt gives you two options for CSV file processing: DuckDB and Polars. You set the engine as follows:</p>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReader
+<pre><code class="language-python">from datagrunt import CSVReader
 
 csv_file = 'myfile.csv'
 dg = CSVReader(csv_file) # by default engine is set to 'polars'.
 </code></pre>
 <p>Alternatively, you may set the processing engine to DuckDB by passing the 'duckdb' value for the engine param as follows:</p>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReader
+<pre><code class="language-python">from datagrunt import CSVReader
 
 csv_file = 'myfile.csv'
 engine = 'duckdb'
@@ -136,7 +136,7 @@ dg = CSVReader(csv_file, engine=engine)
 </code></pre>
 <p>The interface is the exact same for both engines. If you write your code using Polars, but want to change to DuckDB later, simply update the engine param when you instantiate the CSVReader class and leave the rest of your code untouched.</p>
 <p>The engine functionality works exactly the same way for the CSVWriter class as well. Here is an example using the Polars engine:</p>
-<pre><code class="language-python">from datagrunt.csvfile import CSVWriter
+<pre><code class="language-python">from datagrunt import CSVWriter
 
 csv_file = 'myfile.csv'
 dg = CSVWriter(csv_file)
@@ -144,7 +144,7 @@ dg = CSVWriter(csv_file)
 dg.write_json()
 </code></pre>
 <p>Here is an example using the DuckDB engine:</p>
-<pre><code class="language-python">from datagrunt.csvfile import CSVWriter
+<pre><code class="language-python">from datagrunt import CSVWriter
 
 csv_file = 'myfile.csv'
 engine = 'duckdb'
@@ -155,7 +155,7 @@ dg.write_json()
 <hr />
 <h3 id="working-with-csv-properties">Working with CSV Properties</h3>
 <h4 id="get-csv-delimiter">Get CSV Delimiter</h4>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReader
+<pre><code class="language-python">from datagrunt import CSVReader
 
 csv_file = 'myfile.csv'
 csv_props = CSVReader(csv_file)
@@ -163,7 +163,7 @@ delimiter = csv_props.delimiter
 # Optional: Use delimiter.encode() to return a bytestring
 </code></pre>
 <h4 id="manually-set-csv-delimiter">Manually Set CSV Delimiter</h4>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReader
+<pre><code class="language-python">from datagrunt import CSVReader
 
 csv_file = 'myfile.csv'
 csv_props = CSVReader(csv_file)
@@ -171,7 +171,7 @@ csv_props.delimiter = ','  # Override the inferred delimiter
 </code></pre>
 <hr />
 <h3 id="sampling-csv-data">Sampling CSV Data</h3>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReader
+<pre><code class="language-python">from datagrunt import CSVReader
 
 csv_file = 'myfile.csv'
 
@@ -184,7 +184,7 @@ CSVReader(csv_file).get_sample()
 <hr />
 <h3 id="reading-csv-files">Reading CSV Files</h3>
 <h4 id="using-duckdb">Using DuckDB</h4>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReader
+<pre><code class="language-python">from datagrunt import CSVReader
 
 csv_file = 'myfile.csv'
 engine = 'duckdb'
@@ -192,7 +192,7 @@ duckdb_reader = CSVReader(csv_file, engine=engine)
 df_duckdb = duckdb_reader.to_dataframe()
 </code></pre>
 <h4 id="using-polars">Using Polars</h4>
-<pre><code class="language-python">from datagrunt.csvfile import CSVReader
+<pre><code class="language-python">from datagrunt import CSVReader
 
 csv_file = 'myfile.csv'
 polars_reader = CSVReader(csv_file)
@@ -201,7 +201,7 @@ df_polars = polars_reader.to_dataframe()
 <hr />
 <h3 id="writing-csv-to-other-formats">Writing CSV to Other Formats</h3>
 <h4 id="json-and-json-lines-with-duckdb">JSON and JSON Lines with DuckDB</h4>
-<pre><code class="language-python">from datagrunt.csvfile import CSVWriter
+<pre><code class="language-python">from datagrunt import CSVWriter
 
 csv_file = 'myfile.csv'
 engine = 'duckdb'
@@ -214,7 +214,7 @@ duckdb_writer.write_json()  # Optional: Specify output filename
 duckdb_writer.write_json_newline_delimited()
 </code></pre>
 <h4 id="json-and-json-lines-with-polars">JSON and JSON Lines with Polars</h4>
-<pre><code class="language-python">from datagrunt.csvfile import CSVWriter
+<pre><code class="language-python">from datagrunt import CSVWriter
 
 csv_file = 'myfile.csv'
 polars_writer = CSVWriter(csv_file)
@@ -226,8 +226,8 @@ polars_writer.write_json()  # Optional: Specify output filename
 polars_writer.write_json_newline_delimited()  # Use .jsonl extension if specifying filename
 </code></pre>
 <h4 id="integration-with-pandas">Integration with Pandas</h4>
-<pre><code class="language-python">import pandas as pd
-from datagrunt.csvfile import CSVReader
+<pre><code class="language-python">from datagrunt import CSVReader
+import pandas as pd
 
 csv_file = 'myfile.csv'
 csv_props = CSVReader(csv_file)
@@ -242,9 +242,12 @@ df_pandas = pd.read_csv(csv_file, delimiter=csv_props.delimiter)
 </code></pre>
 <hr />
 <h3 id="using-sql-to-query-csv-files">Using SQL To Query CSV Files</h3>
-<p>It's recommened to use the <code>duckdb</code> engine when querying CSV files. These query examples will work with the <code>polars</code> engine exactly the same way as presented, but Datagrunt converts all data to strings when using <code>duckdb</code> and it better preserves the integrity of the data due to not coercing into inferred datatypes. You'll see below that you can use SQL and you can optionally cast columns to different data types as needed.</p>
-<p>For example, you'll notice there are postal codes in the data below. Usually, postal codes are read as integers by most processing engines. Many postal codes begin with a 0. If postal codes are read as an integer, the leading 0 will be dropped erroneously. This can be fixed by using the lpad function in Python, but we'd prefer to present the data in its original form as a string as opposed to having the data altered due to data type conversion.</p>
-<pre><code class="language-python">csv_file = 'electric_vehicle_population_data.csv'
+<p>It's recommened to use the <code>duckdb</code> engine when querying CSV files using SQL. These query examples will work with the <code>polars</code> engine exactly the same way as presented, but Datagrunt converts all data to strings when using <code>duckdb</code> and it better preserves the integrity of the data due to not coercing into inferred datatypes. You'll see below that you can use SQL and you can optionally cast columns to different data types as needed.</p>
+<p>In the below example there are postal codes in the data. Usually, postal codes are read as integers by most processing engines. However, many postal codes begin with a leading 0, and in that case if postal codes are read as an integer, the leading 0 will be dropped erroneously. This can be fixed by using the <code>lpad</code> function in Python, but we'd prefer to present the data in its original form as a string as opposed to having the data altered due to data type conversion.</p>
+<p>Zipcodes are only one of many examples where data integrity may be lost due to type conversions. Therefore, we do our best to preserve the data in its original state, even if it means we have to type case downstream.</p>
+<pre><code class="language-python">from datagrunt import CSVReader
+
+csv_file = 'electric_vehicle_population_data.csv'
 engine = 'duckdb'
 
 dg = CSVReader(csv_file, engine=engine) # set duckdb as the processing engine.
@@ -348,7 +351,15 @@ df = dg.to_dataframe() # only a sample output below is represented.
 </tbody>
 </table>
 <h4 id="write-a-sql-query">Write a SQL Query</h4>
-<pre><code class="language-python">query = f&quot;&quot;&quot;
+<pre><code class="language-python">from datagrunt import CSVReader
+
+csv_file = 'electric_vehicle_population_data.csv'
+engine = 'duckdb'
+
+dg = CSVReader(csv_file, engine=engine) # set duckdb as the processing engine.
+
+# the db_table object is an instance attribute provided by the CSVReader class. It's a temporary object created by DuckDB for local data processing.
+query = f&quot;&quot;&quot;
 WITH core AS (
     SELECT
         City AS city,
@@ -425,8 +436,15 @@ dg.query_data(query)
 </table>
 <h4 id="query-a-polars-dataframe">Query a Polars Dataframe</h4>
 <p><strong>Note:</strong> in the code example below that we are not interpolating the dataframe variable. We are referencing it by embedding it in the string.</p>
-<pre><code class="language-python">df = dg.to_dataframe()
+<pre><code class="language-python">from datagrunt import CSVReader
 
+csv_file = 'electric_vehicle_population_data.csv'
+engine = 'duckdb'
+
+dg = CSVReader(csv_file, engine=engine) # set duckdb as the processing engine.
+df = dg.to_dataframe()
+
+# notice that the dataframe object df is not interpolated.
 df_query = &quot;&quot;&quot;
 WITH core AS (
     SELECT
@@ -552,7 +570,13 @@ dg.query_data(df_query)
 </table>
 <h4 id="query-results-to-dataframe">Query Results To Dataframe</h4>
 <p>In the previous example we demonstrated querying a Polars dataframe by using SQL. Rather than simply returning results, you may convert the results to any type of dataframe you wish.</p>
-<pre><code class="language-python">df = dg.to_dataframe()
+<pre><code class="language-python">from datagrunt import CSVReader
+
+csv_file = 'electric_vehicle_population_data.csv'
+engine = 'duckdb'
+
+dg = CSVReader(csv_file, engine=engine) # set duckdb as the processing engine.
+df = dg.to_dataframe()
 
 df_query = &quot;&quot;&quot;
 WITH core AS (
